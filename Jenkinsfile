@@ -55,12 +55,14 @@ pipeline {
             }
         }
 
-        stage('Test Coverage') {
-            steps {
-                sh 'your_code_coverage_command_here'
-                publishHTML target: [reportDir: 'coverage', reportFiles: 'index.html']
-            }
-        }
+         stage('Test Coverage') {
+                    steps {
+                        sh 'gcov add_numbers.cpp'
+                        sh 'lcov --capture --directory . --output-file coverage.info'
+                        sh 'genhtml coverage.info --output-directory coverage'
+                        publishHTML target: [reportDir: 'coverage', reportFiles: 'index.html']
+                    }
+                }
 
         stage('Static Code Analysis') {
             steps {
