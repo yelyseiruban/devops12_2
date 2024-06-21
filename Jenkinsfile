@@ -30,26 +30,28 @@ pipeline {
 
         stage('Unit Tests') {
             steps {
-                  sh '''
-                    #!/bin/bash
+                  script {
+                      sh '''
+                          #!/bin/bash
 
-                    # Function to run the add_numbers program with two arguments and check the result
-                    function run_test() {
-                        result=$(./add_numbers $1 $2)
-                        expected=$3
+                          # Run the add_numbers program with two arguments and check the result
+                          run_test() {
+                              local result=$(./add_numbers "$1" "$2")
+                              local expected="$3"
 
-                        if [ $result -eq $expected ]; then
-                            echo "Test Passed: $1 + $2 = $3"
-                        else
-                            echo "Test Failed: $1 + $2 expected $3, but got $result"
-                        }
-                    }
+                              if [ $result -eq $expected ]; then
+                                  echo "Test Passed: $1 + $2 = $3"
+                              else
+                                  echo "Test Failed: $1 + $2 expected $3, but got $result"
+                              }
+                          }
 
-                    # Test cases
-                    run_test 3 2 5
-                    run_test 2 6 8
-                    run_test 2 3 5
-                '''
+                          # Test cases
+                          run_test 3 2 5
+                          run_test 2 6 8
+                          run_test 2 3 5
+                      '''
+                  }
             }
         }
 
