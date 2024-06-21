@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    ports:
+      - "8080:8080" # Port Jenkins
+      - "50000:50000" # Port agenta
+    networks:
+      - jenkins-net
+
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    ports:
+      - "9000:9000" # Port SonarQube
+    networks:
+      - jenkins-net
+
+networks:
+  jenkins-net:
