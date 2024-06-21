@@ -43,7 +43,7 @@ pipeline {
                                   echo "Test Passed: $1 + $2 = $3"
                               else
                                   echo "Test Failed: $1 + $2 expected $3, but got $result"
-                              }
+                              fi;
                           }
 
                           # Test cases
