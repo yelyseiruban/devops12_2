@@ -17,7 +17,7 @@ pipeline {
 
         stage('Compile C++ application') {
             steps {
-                sh 'g++ add_numbers.cpp -o add_numbers'
+                sh 'g++ -fprofile-arcs -ftest-coverage add_numbers.cpp -o add_numbers'
             }
         }
 
@@ -29,31 +29,31 @@ pipeline {
 
 
         stage('Unit Tests') {
-            steps {
-                  script {
-                      sh '''
-                          #!/bin/bash
+                    steps {
+                        script {
+                            sh '''
+                                #!/bin/bash
 
-                          # Run the add_numbers program with two arguments and check the result
-                          run_test() {
-                              local result=$(./add_numbers "$1" "$2")
-                              local expected="$3"
+                                # Run the add_numbers program with two arguments and check the result
+                                run_test() {
+                                    local result=$(./add_numbers "$1" "$2" | awk '{print $NF}')
+                                    local expected="$3"
 
-                              if [ $result -eq $expected ]; then
-                                  echo "Test Passed: $1 + $2 = $3"
-                              else
-                                  echo "Test Failed: $1 + $2 expected $3, but got $result"
-                              fi;
-                          }
+                                    if [ $result -eq $expected ]; then
+                                        echo "Test Passed: $1 + $2 = $3"
+                                    else
+                                        echo "Test Failed: $1 + $2 expected $3, but got $result"
+                                    fi;
+                                }
 
-                          # Test cases
-                          run_test 3 2 5
-                          run_test 2 6 8
-                          run_test 2 3 5
-                      '''
-                  }
-            }
-        }
+                                # Test cases
+                                run_test 3 2 5
+                                run_test 2 6 8
+                                run_test 2 3 5
+                            '''
+                        }
+                    }
+                }
 
          stage('Test Coverage') {
                     steps {
